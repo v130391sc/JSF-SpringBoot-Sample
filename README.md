@@ -2,8 +2,8 @@
 ## JSF Web Aplication with Spring boot
 
 ### How to run
->execute <code>mvn spring-boot:run</code><br>
->Go to http://localhost:8081
+* Execute <code>mvn spring-boot:run</code>
+* Go to http://localhost:8081
 
 ### Tecnologías necesarias
 * Spring
