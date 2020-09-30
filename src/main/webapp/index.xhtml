@@ -37,7 +37,11 @@
 								<h:outputText value="#{user.name}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{user.name}" />
+								<p:inputText id="regexNameMod" value="#{user.name}"
+									required="true" validatorMessage="Not valid name">
+									<f:validateRegex pattern="^[a-zA-Z ]*$" />
+								</p:inputText>
+								<p:message for="regexNameMod" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -48,7 +52,11 @@
 								<h:outputText value="#{user.surname}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{user.surname}" />
+								<p:inputText id="regexSurname" value="#{user.surname}"
+									required="true" validatorMessage="Not valid surname">
+									<f:validateRegex pattern="^[a-zA-Z ]*$" />
+								</p:inputText>
+								<p:message for="regexSurname" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -59,7 +67,12 @@
 								<h:outputText value="#{user.email}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{user.email}" />
+								<p:inputText id="regexEmail"
+									value="#{user.email}" required="true"
+									validatorMessage="Not valid email">
+									<f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
+								</p:inputText>
+								<p:message for="regexEmail" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -72,8 +85,9 @@
 								</h:outputText>
 							</f:facet>
 							<f:facet name="input">
-								<p:datePicker value="#{userController.selectedUser.birthDate}"
-									required="true" showTime="true"/>
+								<p:datePicker id="birthDate" value="#{user.birthDate}"
+									required="true" showTime="true" />
+								<p:message for="birthDate" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -100,25 +114,43 @@
 			<p:dialog id="userDlg" widgetVar="userDialog" header="Add User"
 				modal="true" showEffect="fade" hideEffect="fade" resizable="false">
 				<h:form id="dialogForm">
-					<h:panelGrid id="display" columns="2">
+					<p:messages id="addUserError">
+						<p:autoUpdate />
+					</p:messages>
+					<h:panelGrid id="display" columns="3">
 						<p:outputLabel value="Name" />
-						<p:inputText value="#{userController.selectedUser.name}"
-							required="true" />
+						<p:inputText id="regexName"
+							value="#{userController.selectedUser.name}" required="true"
+							validatorMessage="Not valid name">
+							<f:validateRegex pattern="^[a-zA-Z ]*$" />
+						</p:inputText>
+						<p:message for="regexName" />
+
 						<p:outputLabel value="Surname" />
-						<p:inputText value="#{userController.selectedUser.surname}"
-							required="true" />
+						<p:inputText id="regexSurname"
+							value="#{userController.selectedUser.surname}" required="true"
+							validatorMessage="Not valid surname">
+							<f:validateRegex pattern="^[a-zA-Z ]*$" />
+						</p:inputText>
+						<p:message for="regexSurname" />
+
 						<p:outputLabel value="Birth Date" />
-						<p:datePicker value="#{userController.selectedUser.birthDate}"
-							required="true" showTime="true"/>
+						<p:datePicker id="birthDate"
+							value="#{userController.selectedUser.birthDate}" required="true"
+							showTime="true" />
+						<p:message for="birthDate" />
 						<p:outputLabel value="Email" />
-						<p:inputText value="#{userController.selectedUser.email}"
-							required="true" />
+						<p:inputText id="regexEmail"
+							value="#{userController.selectedUser.email}" required="true"
+							validatorMessage="Not valid email">
+							<f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
+						</p:inputText>
+						<p:message for="regexEmail" />
 
 						<f:facet name="footer">
-							<p:commandButton value="Save"
+							<p:commandButton value="Save" validateClient="true"
 								actionListener="#{userController.save()}"
-								update="display,:userListForm:userDataTable"
-								oncomplete="PF('userDialog').hide();" />
+								update="display,:userListForm:userDataTable" />
 						</f:facet>
 					</h:panelGrid>
 				</h:form>
