@@ -19,13 +19,17 @@
 			<h:form id="userListForm">
 				<p:growl id="messages" showDetail="true" />
 				<p:messages />
-				<f:facet name="header">
-                Users
-				</f:facet>
 				<p:dataTable id="userDataTable" var="user"
 					value="#{userController.users}" rows="10" paginator="true"
 					editable="true" selection="#{userController.selectedUser}"
-					rowKey="#{user.id}" selectionMode="single">
+					rowKey="#{user.id}" selectionMode="single"
+					emptyMessage="No users found">
+
+					<f:facet name="header">
+	                Refresh
+	                <p:commandButton action="#{userController.fetchAll()}"
+							icon="pi pi-refresh" update=":userListForm" />
+					</f:facet>
 
 					<p:column headerText="Id" width="10%">
 						<h:outputText value="#{user.id}" />
@@ -61,15 +65,15 @@
 						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Email">
+					<p:column filterBy="#{user.email}" filterMatchMode="contains"
+						headerText="Email">
 						<p:cellEditor>
 							<f:facet name="output">
 								<h:outputText value="#{user.email}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText id="regexEmail"
-									value="#{user.email}" required="true"
-									validatorMessage="Not valid email">
+								<p:inputText id="regexEmail" value="#{user.email}"
+									required="true" validatorMessage="Not valid email">
 									<f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
 								</p:inputText>
 								<p:message for="regexEmail" />
@@ -78,6 +82,23 @@
 					</p:column>
 
 					<p:column headerText="Birth Date">
+						<f:facet name="header">
+							<h:outputText value="Birth Date" />
+							<div class="p-formgroup-inline">
+								<div class="p-field">
+									<p:calendar id="idStartDate"
+										value="#{userController.startDate}">
+									</p:calendar>
+								</div>
+								<div class="p-field">
+									<p:calendar id="idEndDate" value="#{userController.endDate}">
+									</p:calendar>
+								</div>
+							</div>
+							<p:commandButton value="Search"
+								update=":userListForm:userDataTable"
+								action="#{userController.filterByRangeDates}" icon="pi pi-check" />
+						</f:facet>
 						<p:cellEditor>
 							<f:facet name="output">
 								<h:outputText value="#{user.birthDate}">
@@ -149,7 +170,7 @@
 
 						<f:facet name="footer">
 							<p:commandButton value="Save" validateClient="true"
-								actionListener="#{userController.save()}"
+								actionListener="#{userController.save}"
 								update="display,:userListForm:userDataTable" />
 						</f:facet>
 					</h:panelGrid>

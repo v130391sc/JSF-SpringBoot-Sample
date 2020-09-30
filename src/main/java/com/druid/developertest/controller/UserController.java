@@ -2,9 +2,11 @@ package com.druid.developertest.controller;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -20,6 +22,7 @@ import com.druid.developertest.constants.UserConstants;
 import com.druid.developertest.exceptions.ValidationException;
 import com.druid.developertest.model.User;
 import com.druid.developertest.service.UserService;
+import com.sun.tools.sjavac.Log;
 
 import lombok.Data;
 
@@ -35,6 +38,10 @@ public class UserController implements Serializable {
 	@Autowired
 	private UserService userService;
 	
+	private Date startDate;
+	
+	private Date endDate;
+	
 	@PostConstruct
 	public void initialize() {
 		this.users = this.userService.findAll();
@@ -43,6 +50,10 @@ public class UserController implements Serializable {
 	
 	public void refresh() {
 		this.selectedUser = new User();
+	}
+	
+	public void fetchAll() {
+		this.users = this.userService.findAll();
 	}
 
 	public void save() {
@@ -68,6 +79,12 @@ public class UserController implements Serializable {
 	public void editListener(RowEditEvent event) {
 		this.userService.save((User) event.getObject());
 	}
+	
+	public void filterByRangeDates() {
+		this.users = this.userService.findBeetweenBirthDates(this.startDate, this.endDate);
+		this.startDate = null;
+		this.endDate = null;
+    }
 	
 	private void validateUser() throws ValidationException {
 		if(!this.selectedUser.getName().matches(UserConstants.REGEX_ONLY_TEXT)) {
