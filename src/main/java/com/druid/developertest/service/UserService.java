@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.druid.developertest.model.User;
-import com.druid.developertest.repository.UserDaoImpl;
+import com.druid.developertest.repository.UserRepository;
 
 @Service
 public class UserService {
 
-	private UserDaoImpl userDao;
+	private UserRepository userDao;
 	
 	@Autowired
-	public UserService(UserDaoImpl userDao) {
+	public UserService(UserRepository userDao) {
 		this.userDao = userDao;
 	}
 	
@@ -27,15 +27,11 @@ public class UserService {
 		this.userDao.save(user);
 	}
 	
-	public void deleteById(Long id) {
-		this.userDao.remove(id);
+	public void deleteById(User user) {
+		this.userDao.delete(user);
 	}
 	
 	public List<User> findBeetweenBirthDates(Date startDate, Date endDate) {
-		return this.userDao.findBetweenBirthDates(startDate, endDate);
-	}
-	
-	public User findByEmail(String email) {
-		return this.userDao.findByEmail(email);
+		return this.userDao.findByBirthDateBetween(startDate, endDate);
 	}
 }

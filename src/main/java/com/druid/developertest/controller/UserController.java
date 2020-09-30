@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +23,6 @@ import com.druid.developertest.constants.UserConstants;
 import com.druid.developertest.exceptions.ValidationException;
 import com.druid.developertest.model.User;
 import com.druid.developertest.service.UserService;
-import com.sun.tools.sjavac.Log;
 
 import lombok.Data;
 
@@ -44,7 +44,7 @@ public class UserController implements Serializable {
 	
 	@PostConstruct
 	public void initialize() {
-		this.users = this.userService.findAll();
+		fetchAll();
 		this.selectedUser = new User();
 	}
 	
@@ -53,13 +53,15 @@ public class UserController implements Serializable {
 	}
 	
 	public void fetchAll() {
-		this.users = this.userService.findAll();
+		List<User> usersFound = this.userService.findAll();
+		this.users = usersFound.isEmpty() ? new ArrayList<>() : usersFound;
 	}
 
 	public void save() {
 		try {
 			validateUser();			
 			this.userService.save(this.selectedUser);
+			this.users.add(this.selectedUser);
 			this.selectedUser = null;
 	        PrimeFaces.current().executeScript("PF('userDialog').hide()");
 		} catch (ValidationException e) {
@@ -71,7 +73,7 @@ public class UserController implements Serializable {
 	}
 	
 	public void delete() {
-		this.userService.deleteById(this.selectedUser.getId());
+		this.userService.deleteById(this.selectedUser);
 		this.users.remove(this.selectedUser);
 		this.selectedUser = null;
 	}
@@ -81,9 +83,12 @@ public class UserController implements Serializable {
 	}
 	
 	public void filterByRangeDates() {
-		this.users = this.userService.findBeetweenBirthDates(this.startDate, this.endDate);
-		this.startDate = null;
-		this.endDate = null;
+		if(this.startDate != null && this.endDate != null) {
+			List<User> usersFound = this.userService.findBeetweenBirthDates(this.startDate, this.endDate);
+			this.users = usersFound.isEmpty() ? new ArrayList<>() : usersFound;
+			this.startDate = null;
+			this.endDate = null;			
+		}
     }
 	
 	private void validateUser() throws ValidationException {
