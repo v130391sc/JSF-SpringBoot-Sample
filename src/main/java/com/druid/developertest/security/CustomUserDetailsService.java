@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.druid.developertest.model.User;
-import com.druid.developertest.repository.UserRepository;
 import com.druid.developertest.service.UserService;
 
 @Service
