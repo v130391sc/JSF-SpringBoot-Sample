@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title>Developer Test Dru-Id Template</title>
 	<!--         <h:outputStylesheet library="css" name="styles.css"/> -->
 </h:head>
 <h:body>
-	<ui:insert name="top"><h1>Developer Test Dru-Id</h1></ui:insert>
+	<ui:insert name="top">
+		<p:commandButton value="Logout" icon="pi pi-sign-out" style="float:right;" action="#{userController.logout}">
+		</p:commandButton>
+		<h1>Developer Test Dru-Id</h1>
+	</ui:insert>
 
 	<ui:insert name="content">Contenido</ui:insert>
 

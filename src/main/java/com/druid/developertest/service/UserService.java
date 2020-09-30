@@ -34,4 +34,8 @@ public class UserService {
 	public List<User> findBeetweenBirthDates(Date startDate, Date endDate) {
 		return this.userDao.findByBirthDateBetween(startDate, endDate);
 	}
+	
+	public User findByUsername(String username){
+		return this.userDao.findByUsername(username);
+	}
 }

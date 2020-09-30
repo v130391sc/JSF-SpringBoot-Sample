@@ -4,6 +4,7 @@
 ### How to run
 * Execute <code>mvn spring-boot:run</code>
 * Go to http://localhost:8081
+* User: admin - Password: admin
 
 ### Tecnologías necesarias
 * Spring

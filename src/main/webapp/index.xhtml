@@ -26,13 +26,27 @@
 					emptyMessage="No users found">
 
 					<f:facet name="header">
-	                Refresh
+	                Users
 	                <p:commandButton action="#{userController.fetchAll()}"
 							icon="pi pi-refresh" update=":userListForm" />
 					</f:facet>
 
 					<p:column headerText="Id" width="10%">
 						<h:outputText value="#{user.id}" />
+					</p:column>
+
+					<p:column headerText="Username">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{user.username}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="usrnme" value="#{user.username}"
+									required="true">
+								</p:inputText>
+								<p:message for="usrnme" />
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 
 					<p:column headerText="Name">
@@ -83,7 +97,7 @@
 
 					<p:column headerText="Birth Date">
 						<f:facet name="header">
-							<h:outputText value="Birth Date" />
+							<h:outputText value="Birth D" />
 							<div class="p-formgroup-inline">
 								<div class="p-field">
 									<p:calendar id="idStartDate"
@@ -139,6 +153,19 @@
 						<p:autoUpdate />
 					</p:messages>
 					<h:panelGrid id="display" columns="3">
+
+						<p:outputLabel value="Username" />
+						<p:inputText id="username"
+							value="#{userController.selectedUser.username}" required="true">
+						</p:inputText>
+						<p:message for="username" />
+
+						<h:outputText value="Password " />
+						<p:password id="feedback"
+							value="#{userController.selectedUser.name}" required="true"
+							feedback="true" />
+						<p:message for="feedback" />
+
 						<p:outputLabel value="Name" />
 						<p:inputText id="regexName"
 							value="#{userController.selectedUser.name}" required="true"

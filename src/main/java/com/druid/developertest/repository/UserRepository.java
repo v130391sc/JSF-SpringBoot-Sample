@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, String>{
 	
 	public List<User> findByBirthDateBetween(Date startDate, Date endDate);
 	
+	public User findByUsername(String username);
+	
 }

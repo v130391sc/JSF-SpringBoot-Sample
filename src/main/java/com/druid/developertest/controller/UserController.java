@@ -1,5 +1,6 @@
 package com.druid.developertest.controller;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.druid.developertest.constants.UserConstants;
 import com.druid.developertest.exceptions.ValidationException;
@@ -56,7 +58,12 @@ public class UserController implements Serializable {
 		List<User> usersFound = this.userService.findAll();
 		this.users = usersFound.isEmpty() ? new ArrayList<>() : usersFound;
 	}
+	
+	public void logout() throws IOException {
+		FacesContext.getCurrentInstance().getExternalContext().redirect("/logout");
+	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save() {
 		try {
 			validateUser();			
@@ -72,6 +79,7 @@ public class UserController implements Serializable {
         
 	}
 	
+	@PreAuthorize("hasRole('ROLE_VIEWER')")
 	public void delete() {
 		this.userService.deleteById(this.selectedUser);
 		this.users.remove(this.selectedUser);
