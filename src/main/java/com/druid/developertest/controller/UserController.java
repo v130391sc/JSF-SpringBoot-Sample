@@ -48,7 +48,7 @@ public class UserController implements Serializable {
 	@PostConstruct
 	public void initialize() {
 		fetchAll();
-		this.selectedUser = new User();
+		refresh();
 	}
 	
 	/**
