@@ -42,29 +42,37 @@ public class UserController implements Serializable {
 	
 	private Date endDate;
 	
+	/**
+	 * Initialize the ManageBean
+	 */
 	@PostConstruct
 	public void initialize() {
 		fetchAll();
 		this.selectedUser = new User();
 	}
 	
+	/**
+	 * Updates the selected user
+	 */
 	public void refresh() {
 		this.selectedUser = new User();
 	}
 	
+	/**
+	 * Updates the user list in view
+	 */
 	public void fetchAll() {
 		List<User> usersFound = this.userService.findAll();
 		this.users = usersFound.isEmpty() ? new ArrayList<>() : usersFound;
 	}
-	
-	public void logout() throws IOException {
-		FacesContext.getCurrentInstance().getExternalContext().redirect("/logout");
-	}
 
+	/**
+	 * Save new user
+	 */
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void save() {
 		try {
-			validateUser();			
+			this.selectedUser.validate();			
 			this.userService.save(this.selectedUser);
 			this.users.add(this.selectedUser);
 			this.selectedUser = null;
@@ -77,17 +85,28 @@ public class UserController implements Serializable {
         
 	}
 	
+	
+	/**
+	 * Deletes an user
+	 */
 	@PreAuthorize("hasRole('ROLE_VIEWER')")
 	public void delete() {
-		this.userService.deleteById(this.selectedUser);
+		this.userService.delete(this.selectedUser);
 		this.users.remove(this.selectedUser);
 		this.selectedUser = null;
 	}
 	
+	/**
+	 * Edit an user
+	 * @param event
+	 */
 	public void editListener(RowEditEvent event) {
 		this.userService.save((User) event.getObject());
 	}
 	
+	/**
+	 * Filter to search users by their birth dates
+	 */
 	public void filterByRangeDates() {
 		if(this.startDate != null && this.endDate != null) {
 			List<User> usersFound = this.userService.findBeetweenBirthDates(this.startDate, this.endDate);
@@ -97,25 +116,12 @@ public class UserController implements Serializable {
 		}
     }
 	
-	private void validateUser() throws ValidationException {
-		if(!this.selectedUser.getName().matches(UserConstants.REGEX_ONLY_TEXT)) {
-			throw new ValidationException(UserConstants.VALIDATION_NAME_ERROR);
-		} else if(!this.selectedUser.getSurname().matches(UserConstants.REGEX_ONLY_TEXT)) {
-			throw new ValidationException(UserConstants.VALIDATION_SURNAME_ERROR);
-		} else if(calculateUserAge(this.selectedUser.getBirthDate()) < UserConstants.MIN_AGE) {
-			throw new ValidationException(UserConstants.VALIDATION_BIRTH_DATE_ERROR);
-		} else if(!this.selectedUser.getEmail().matches(UserConstants.REGEX_EMAIL)) {
-			throw new ValidationException(UserConstants.VALIDATION_EMAIL_ERROR);
-		}
+	/**
+	 * Logout
+	 * @throws IOException
+	 */
+	public void logout() throws IOException {
+		FacesContext.getCurrentInstance().getExternalContext().redirect("/logout");
 	}
-	
-	private int calculateUserAge(Date birthDate) {
-		DateFormat formatter = new SimpleDateFormat(UserConstants.FORMAT_DATE_YYMMHHH);                           
-	    int d1 = Integer.parseInt(formatter.format(birthDate));                            
-	    int d2 = Integer.parseInt(formatter.format(new Date()));                          
-	    return (d2 - d1) / 10000;
-	}
-	
-
 
 }
